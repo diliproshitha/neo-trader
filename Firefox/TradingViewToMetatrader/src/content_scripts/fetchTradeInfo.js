@@ -44,4 +44,5 @@ const getPosition = () => {
     return position;
 }
 
-getPosition();
+const position = getPosition();
+position;
