@@ -1,6 +1,8 @@
-function sendOrder(order) {
-  document.getElementById('instrument').innerHTML = JSON.stringify(order);
-  let url = `http://localhost:23456/submit-trade?symbol=${order.instrument}&type=${order.type}&entryPrice=${order.entryPrice}&stopLossPrice=${order.stopLossPrice}&takeProfitPrice=${order.takeProfitPrice}`;
+function sendOrder() {
+  const order = getOrder();
+  const url = `http://localhost:23456/submit-trade?symbol=${order.instrument}&type=${order.type}&entryPrice=${order.entryPrice}
+  &stopLossPrice=${order.stopLossPrice}&takeProfitPrice=${order.takeProfitPrice}&riskPercentage=${order.riskPercentage}`;
+
   fetch(url, {
     method: 'POST',
     headers: {
@@ -12,20 +14,32 @@ function sendOrder(order) {
     .then(response => console.log(JSON.stringify(response)));
 }
 
+function getOrder() {
+  const order = {};
+  order.instrument = document.getElementById('input-pair').value;
+  order.type = document.getElementById('input-position-type').value;
+  order.entryPrice = document.getElementById('input-position-entry-price').value;
+  order.stopLossPrice = document.getElementById('input-position-sl-price').value;
+  order.takeProfitPrice = document.getElementById('input-position-tp-price').value;
+  order.riskPercentage = document.getElementById('input-position-lot-size').value;
+  return order;
+}
+
 const showErrorContent = () => {
   document.getElementById('popup-content').classList.add('hidden');
-    document.getElementById('error-content').classList.remove('hidden');
+  document.getElementById('error-content').classList.remove('hidden');
 }
 
 const setTradeInfo = (position) => {
   if (position) {
-    document.getElementById('instrument').innerHTML = position.instrument;
-    document.getElementById('type').innerHTML = position.type;
-    document.getElementById('entry-price').innerHTML = position.entryPrice;
-    document.getElementById('stop-loss-price').innerHTML = position.stopLossPrice;
-    document.getElementById('take-profit-price').innerHTML = position.takeProfitPrice;
-
-    document.getElementById('send-button').addEventListener('click', () => sendOrder(position));
+    console.log(position);
+    document.getElementById('input-pair').value = position.instrument;
+    document.getElementById('input-position-type').value = position.type;
+    document.getElementById('input-position-entry-price').value = position.entryPrice;
+    document.getElementById('input-position-sl-price').value = position.stopLossPrice;
+    document.getElementById('input-position-tp-price').value = position.takeProfitPrice;
+    document.getElementById('input-position-lot-size').value = 1.0;
+    document.getElementById('send-button').addEventListener('click', () => sendOrder());
   } else {
     showErrorContent();
   }
@@ -34,6 +48,7 @@ const setTradeInfo = (position) => {
 window.addEventListener('focus', () => {
   browser.tabs.executeScript({ file: "../content_scripts/fetchTradeInfo.js" })
     .then(result => {
+      console.log(result);
       if (result && result[0]) {
         setTradeInfo(result[0])
       } else {

@@ -1,39 +1,71 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="styles.css"/>
-    <script type="text/javascript" src="scripts.js"></script>
-  </head>
+<head>
+	<link rel="stylesheet" href="styles.css">
+  <script type="text/javascript" src="scripts.js"></script>
+</head>
 
 <body>
-  <div id="popup-content">
-    <div>
-        <span>Instrument: </span>
-        <span id="instrument"></span>
-    </div>
-    <div>
-        <span>Type: </span>
-        <span id="type"></span>
-    </div>
-    <div>
-        <span>Entry Price: </span>
-        <span id="entry-price"></span>
-    </div>
-    <div>
-        <span>Stop Loss Price: </span>
-        <span id="stop-loss-price"></span>
-    </div>
-    <div>
-        <span>Take Profit Price: </span>
-        <span id="take-profit-price"></span>
-    </div>
-    <button type="reset" id="send-button">Send Order</button>
-  </div>
-  <div id="error-content" class="hidden">
-    <p>Cannot find a order panel in Tradingview</p><p>Please try again</p>
-  </div>
+	<div class="card-wrap">
+		<div class="card-content-wrap">
+			<div class="card-header four">
+				<i class="fab fa-js-square"></i>
+			</div>
+			<div class="float-section">
+				<div class="header">
+					<div class="logo-wrapper">
+						<div class="logo"></div>
+					</div>
+					<div class="title"><h2>Tradingview to Metatrader</h2></div>
+				</div>
+				<div class="float-card-content-wrapper">
+					<div class="card-content">
+						<h1 class="card-title">Position Details</h1>
+						<div class="position-details">
+              <div class="position-detail-wrapper">
+								<div class="attribute-name">Pair: </div>
+								<div class="attribute-value">
+									<input id="input-pair" type="text" disabled>
+								</div>
+              </div>
+							<div class="position-detail-wrapper">
+								<div class="attribute-name">Type: </div>
+								<div class="attribute-value">
+									<input id="input-position-type" type="text" disabled>
+								</div>
+							</div>
+							<div class="position-detail-wrapper">
+								<div class="attribute-name">Entry Price: </div>
+								<div class="attribute-value">
+									<input id="input-position-entry-price" type="text">
+								</div>
+							</div>
+							<div class="position-detail-wrapper">
+								<div class="attribute-name">Stop Loss Price: </div>
+								<div class="attribute-value">
+									<input id="input-position-sl-price" type="text">
+								</div>
+							</div>
+							<div class="position-detail-wrapper">
+								<div class="attribute-name">Take Profit Price: </div>
+								<div class="attribute-value">
+									<input id="input-position-tp-price" type="text">
+								</div>
+							</div>
+							<div class="position-detail-wrapper">
+								<div class="attribute-name">Risk Percentage(%): </div>
+								<div class="attribute-value">
+									<input id="input-position-lot-size" type="text" value="1.0">
+								</div>
+							</div>
+						</div>
+						<button id="send-button" class="card-btn four">Send</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
