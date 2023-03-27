@@ -38,7 +38,7 @@ const setTradeInfo = (position) => {
     document.getElementById('input-position-entry-price').value = position.entryPrice;
     document.getElementById('input-position-sl-price').value = position.stopLossPrice;
     document.getElementById('input-position-tp-price').value = position.takeProfitPrice;
-    document.getElementById('input-position-lot-size').value = 1.0;
+    document.getElementById('input-position-lot-size').value = "1.0";
     document.getElementById('send-button').addEventListener('click', () => sendOrder());
   } else {
     showErrorContent();
