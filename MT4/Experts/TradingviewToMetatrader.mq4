@@ -262,9 +262,10 @@ void ProcessUrlString(string urlString) {
    double entryPrice = 0.0;
    double stopLossPrice = 0.0;
    double takeProfitPrice = 0.0;
+   double riskPercentage = DefaultRiskPercentage;
    
    // Define an array of attribute names
-   string attributeNames[5] = {"symbol", "type", "entryPrice", "stopLossPrice", "takeProfitPrice"};
+   string attributeNames[5] = {"symbol", "type", "entryPrice", "stopLossPrice", "takeProfitPrice", "riskPercentage"};
    
    // Iterate over the attribute names and extract their values
    for (int i = 0; i < ArraySize(attributeNames); i++) {
@@ -287,17 +288,19 @@ void ProcessUrlString(string urlString) {
                stopLossPrice = StrToDouble(myValue);
            } else if (myAttributeName == "takeProfitPrice") {
                takeProfitPrice = StrToDouble(myValue);
+           } else if (myAttributeName == "riskPercentage") {
+               riskPercentage = StrToDouble(myValue);
            }
        }
    }
    
-   SubmitTrade(symbol, type, entryPrice, stopLossPrice, takeProfitPrice);
+   SubmitTrade(symbol, type, entryPrice, stopLossPrice, takeProfitPrice, riskPercentage);
 }
 
-bool SubmitTrade(string symbol, string type, double entryPrice, double stopLossPrice, double takeProfitPrice) {
+bool SubmitTrade(string symbol, string type, double entryPrice, double stopLossPrice, double takeProfitPrice, double riskPercentage) {
    int stopLossDistance = GetDifferenceInPips(entryPrice, stopLossPrice);
    Print("stopLossDistance: ", stopLossDistance);
-   double lotSize = GetLotSize(DefaultRiskPercentage/100, stopLossDistance, symbol);
+   double lotSize = GetLotSize(riskPercentage/100, stopLossDistance, symbol);
    
    Print("Symbol: ", symbol);
    Print("Type: ", type);
