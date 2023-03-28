@@ -149,7 +149,7 @@
   }
 
   .position-detail-wrapper {
-    margin: 10px 0 10px 0;
+    margin: 7px 0 7px 0;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -185,4 +185,14 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .social-icon img {
+    width: 20px;
   }
