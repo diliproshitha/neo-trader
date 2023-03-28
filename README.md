@@ -20,3 +20,12 @@
       in above screenshot, symbol name is `EURUSD.a`. So `.a` should be added as SymbolPostfix.  
 2. Install Browser extension. (Currently only support for Firefox)
 3. Send positions from Tradingview to Metatrader using browser extension.
+    ![tradingview-extension.png](tradingview-extension.png)
+   - Open a chart in trading view and draw a position using position tool and double click on it. .
+   `Long Position` popup will appear. 
+   - Open the extension, and it will show the position details. Then click on `Send` button. Trade 
+   will be placed in the Metatrader platform.
+
+## Credits:
+I have used following references to build this project.
+    - https://www.mql5.com/en/blogs/post/706665
