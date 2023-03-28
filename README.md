@@ -1,5 +1,5 @@
 # TradingView To MetaTrader
-### Send limit orders from Traingview to Metatrader platform by one click!
+### Send limit orders from Traingview to Metatrader platform with one click!
 
 ## How it works?
 1. Install Expert Advisor in Metatrader terminal. (Currently only support for Metatrader 4)
