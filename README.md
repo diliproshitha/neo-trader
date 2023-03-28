@@ -28,4 +28,4 @@
 
 ## Credits:
 I have used following references to build this project.
-    - https://www.mql5.com/en/blogs/post/706665
+- https://www.mql5.com/en/blogs/post/706665
