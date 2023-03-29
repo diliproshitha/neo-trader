@@ -21,7 +21,7 @@
       - SymbolPostfix - Some brokers add some letters into the end of the symbol name. As you can see
       in above screenshot, symbol name is `EURUSD.a`. So `.a` should be added as SymbolPostfix.  
 2. Install Browser extension. (Currently only support for Firefox)
-   - Will be published soon.. :)
+   - Firefox: https://addons.mozilla.org/en-US/firefox/addon/tradingview-to-metatrader/
 3. Send positions from Tradingview to Metatrader.
 
     ![tradingview-extension.png](tradingview-extension.png)
