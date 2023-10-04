@@ -1,0 +1,100 @@
+import { Button } from "@chakra-ui/react";
+import TextInputSection from "../textInputSection/TextInputSection";
+import SelectInputSection from "../selectInputSection/SelectInputSection";
+import { useState, FC } from "react";
+import { MainContentPanelState, PendingOrderType, TradeExecutionType, TradeInfo, TradeType, TradingViewTradeInfo } from "../../models/commonModels";
+import { getOrderTypePendingOptions, getTradeInfoInitialData } from "../../service/initialData.service";
+import { getDefaultPendingOrderType, getDefaultTradeExecutionType } from "../../service/configuration.service";
+import { TRADE_EXECUTION_TYPE_OPTIONS } from "../../constants/commonConstants";
+import { buildOrderSubmitUrl, getOrderSubmitRequestHeaders } from "../../service/requestHelper.service";
+
+type TradeInfoPanelProps = {
+    tradingViewTradeInfo: TradingViewTradeInfo,
+    setStatusCallback: any,
+    errorMessageCallback: any
+}
+
+const TradeInfoPanel: FC<TradeInfoPanelProps> = ({tradingViewTradeInfo, setStatusCallback, errorMessageCallback}) => {
+
+    const [tradeInfo, setTradeInfo] = useState<TradeInfo>(getTradeInfoInitialData(tradingViewTradeInfo));
+    const [isLoading, setLoading] = useState<boolean>(false);
+
+    const sendOrder = () => {
+        setLoading(true);
+        const url = buildOrderSubmitUrl(tradeInfo);
+        const headers = getOrderSubmitRequestHeaders();
+
+        fetch(url, headers)
+        .then(response => {
+            setLoading(false);
+            setStatusCallback(MainContentPanelState.TRADE_PLACED_SUCCESSFULLY);
+            console.log(JSON.stringify(response))
+        })
+        .catch(error => {
+            setLoading(false);
+            setStatusCallback(MainContentPanelState.ERROR_PLACING_TRADE);
+            errorMessageCallback(JSON.stringify(error));
+        })
+    };
+    
+    return (
+        <>
+            <TextInputSection 
+                label="Pair" 
+                inputValue={tradeInfo.instrument} 
+                inputOnChangeFn={(value: string) => setTradeInfo({...tradeInfo, instrument: value})}
+            />
+            <TextInputSection 
+                label="Type" 
+                inputValue={tradeInfo.type} 
+                inputOnChangeFn={(value: TradeType) => setTradeInfo({...tradeInfo, type: value})}
+            />
+            <TextInputSection 
+                label="Entry price" 
+                inputValue={tradeInfo.entryPrice} 
+                inputOnChangeFn={(value: string) => setTradeInfo({...tradeInfo, entryPrice: value})}
+            />
+            <TextInputSection 
+                label="Stop loss price" 
+                inputValue={tradeInfo.stopLossPrice} 
+                inputOnChangeFn={(value: string) => setTradeInfo({...tradeInfo, stopLossPrice: value})}
+            />
+            <TextInputSection 
+                label="Take profit price" 
+                inputValue={tradeInfo.takeProfitPrice} 
+                inputOnChangeFn={(value: string) => setTradeInfo({...tradeInfo, takeProfitPrice: value})}
+            />
+            <TextInputSection 
+                label="Risk percentage (%)" 
+                inputValue={tradeInfo.riskPercentage} 
+                inputOnChangeFn={(value: string) => setTradeInfo({...tradeInfo, riskPercentage: value})}
+            />
+            <SelectInputSection 
+                label="Order execution type" 
+                defaultValue={getDefaultTradeExecutionType()} 
+                options={TRADE_EXECUTION_TYPE_OPTIONS} 
+                onChangeFn={(value: TradeExecutionType) => setTradeInfo({...tradeInfo, tradeExecutionType: value})}
+            />
+            {tradeInfo.tradeExecutionType === TradeExecutionType.PENDING_ORDER && (
+                <SelectInputSection 
+                    label="Pending order type" 
+                    defaultValue={getDefaultPendingOrderType()} 
+                    options={getOrderTypePendingOptions(tradeInfo.type)} 
+                    onChangeFn={(value: PendingOrderType) => setTradeInfo({...tradeInfo, pendingOrderType: value})}
+                />
+            )}
+            <Button 
+                colorScheme='orange' 
+                size='sm' 
+                width='100%' 
+                mt='10px' 
+                isLoading={isLoading}
+                onClick={sendOrder}
+            >
+                Send
+            </Button>
+        </>
+    );
+};
+
+export default TradeInfoPanel;
