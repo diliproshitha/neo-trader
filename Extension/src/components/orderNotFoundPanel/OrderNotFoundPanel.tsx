@@ -4,7 +4,7 @@ const OrderNotFoundPanel = () => {
     return <>
         <Text color='gray.600'>Hmm... such emptyness...</Text>
         <Image src="/assets/trade-not-found.png" />
-        <Text color='gray.500' fontSize='md'>Fire up a TradinView chart and let's hustle!</Text>
+        <Text color='gray.500' fontSize='md'>Fire up a TradingView chart and let's hustle!</Text>
     </>
 };
 
