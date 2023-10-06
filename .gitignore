@@ -9,6 +9,8 @@ dist/
 application-manager/src/frontend/node
 application-manager/src/frontend/node_modules
 application-manager/src/frontend/dist
+Extension/node_modules/
+Extension/build/
 
 # Compiled Java class files
 *.class
