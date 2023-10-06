@@ -1,6 +1,6 @@
 import { VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { getTradeInfoFirefox } from "../../service/tradingViewTradeInfo.service";
+import { getTradeInfo } from "../../service/tradingViewTradeInfo.service";
 import { TradingViewTradeInfo, MainContentPanelState } from "../../models/commonModels";
 import TradeInfoPanel from "../tradeInfoPanel/TradeInfoPanel";
 import OrderNotFoundPanel from "../orderNotFoundPanel/OrderNotFoundPanel";
@@ -14,10 +14,10 @@ const MainContentPanel = () => {
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     useEffect(() => {
-        getTradeInfoFirefox()
+        getTradeInfo()
             .then(res => {
-                if (res.length > 0 && res[0]) {
-                    setTradeInfo(res[0]);
+                if (res) {
+                    setTradeInfo(res);
                     setPanelState(MainContentPanelState.TRADE_FOUND);
                 } else {
                     setPanelState(MainContentPanelState.TRADE_NOT_FOUND);
