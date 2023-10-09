@@ -28,12 +28,9 @@ export enum TradeExecutionType {
 }
 
 export enum PendingOrderType {
-    AUTO_PENDING_BUY = 'AUTO_PENDING_BUY',
-    AUTO_PENDING_SELL = 'AUTO_PENDING_SELL',
-    BUY_LIMIT = 'BUY_LIMIT',
-    SELL_LIMIT = 'SELL_LIMIT',
-    BUY_STOP = 'BUY_STOP',
-    SELL_STOP = 'SELL_STOP'
+    AUTO = 'AUTO',
+    LIMIT = 'LIMIT',
+    STOP = 'STOP',
 }
 
 export enum MainContentPanelState {

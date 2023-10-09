@@ -55,14 +55,7 @@ const TradeInfoPanel: FC<TradeInfoPanelProps> = ({tradingViewTradeInfo, setStatu
     const mapToPendingOrderType = (orderType: TradeType, executionType: TradeExecutionType): PendingOrderType | undefined => {
         let pendingOrderType;
         if (executionType === TradeExecutionType.PENDING_ORDER) {
-            switch (orderType) {
-                case TradeType.LONG:
-                    pendingOrderType = PendingOrderType.AUTO_PENDING_BUY;
-                    break;
-                case TradeType.SHORT:
-                    pendingOrderType = PendingOrderType.AUTO_PENDING_SELL;
-                    break;
-            }
+            pendingOrderType = PendingOrderType.AUTO;
         }
         return pendingOrderType;
     }

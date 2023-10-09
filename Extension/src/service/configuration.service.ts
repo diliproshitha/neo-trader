@@ -13,12 +13,7 @@ export const getDefaultRiskPercentage = (): string => {
 }
 
 export const getDefaultPendingOrderType = (tradeType: TradeType): PendingOrderType => {
-    switch (tradeType) {
-        case TradeType.LONG:
-            return PendingOrderType.AUTO_PENDING_BUY;
-        default:
-            return PendingOrderType.AUTO_PENDING_SELL;
-    }
+    return PendingOrderType.AUTO;
 }
 
 export const isDevMode = (): boolean => {
