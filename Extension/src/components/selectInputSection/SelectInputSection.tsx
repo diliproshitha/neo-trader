@@ -4,7 +4,7 @@ import { FC } from "react";
 
 export type SelectInputSectionProps = {
     label: string,
-    defaultValue: string,
+    defaultValue?: string,
     options: {key: string, value: string}[],
     onChangeFn: any
 }

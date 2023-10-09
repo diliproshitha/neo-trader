@@ -1,4 +1,4 @@
-import { PendingOrderType, TradeExecutionType } from "../models/commonModels"
+import { PendingOrderType, TradeExecutionType, TradeType } from "../models/commonModels"
 
 export const getDefaultTradeExecutionType = (): TradeExecutionType => {
     return process.env.REACT_APP_DEFAULT_TRADE_EXECUTION_TYPE
@@ -12,8 +12,13 @@ export const getDefaultRiskPercentage = (): string => {
         : "1";
 }
 
-export const getDefaultPendingOrderType = (): PendingOrderType => {
-    return PendingOrderType.AUTO;
+export const getDefaultPendingOrderType = (tradeType: TradeType): PendingOrderType => {
+    switch (tradeType) {
+        case TradeType.LONG:
+            return PendingOrderType.AUTO_PENDING_BUY;
+        default:
+            return PendingOrderType.AUTO_PENDING_SELL;
+    }
 }
 
 export const isDevMode = (): boolean => {

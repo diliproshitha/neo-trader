@@ -6,13 +6,13 @@ import { PendingOrderType, TradeExecutionType } from "../models/commonModels";
 ];
 
 export const PENDING_SELL_OPTIONS = [
-    {key: PendingOrderType.AUTO, value: 'Auto'}, 
+    {key: PendingOrderType.AUTO_PENDING_SELL, value: 'Auto'}, 
     {key: PendingOrderType.SELL_LIMIT, value: 'Sell Limit'}, 
     {key: PendingOrderType.SELL_STOP, value: 'Sell Stop'}
 ];
 
 export const PENDING_BUY_OPTIONS = [
-    {key: PendingOrderType.AUTO, value: 'Auto'}, 
+    {key: PendingOrderType.AUTO_PENDING_BUY, value: 'Auto'}, 
     {key: PendingOrderType.BUY_LIMIT, value: 'Buy Limit'}, 
     {key: PendingOrderType.BUY_STOP, value: 'Buy Stop'}
 ];

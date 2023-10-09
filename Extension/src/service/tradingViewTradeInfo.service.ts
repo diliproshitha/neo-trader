@@ -1,5 +1,5 @@
-import { TradingViewTradeInfo } from "../models/commonModels";
-import { BrowserType, getBrowserType } from "./browserUtil.service";
+import { BrowserType, TradingViewTradeInfo } from "../models/commonModels";
+import { getBrowserType } from "./browserUtil.service";
 import { isDevMode } from "./configuration.service";
 import { getTradingViewTradeInfoTestData } from "./testData.service";
 

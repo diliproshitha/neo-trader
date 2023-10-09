@@ -7,6 +7,7 @@ import { getOrderTypePendingOptions, getTradeInfoInitialData } from "../../servi
 import { getDefaultPendingOrderType, getDefaultTradeExecutionType } from "../../service/configuration.service";
 import { TRADE_EXECUTION_TYPE_OPTIONS } from "../../constants/commonConstants";
 import { buildOrderSubmitUrl, getOrderSubmitRequestHeaders } from "../../service/requestHelper.service";
+import { useEffect } from "react";
 
 type TradeInfoPanelProps = {
     tradingViewTradeInfo: TradingViewTradeInfo,
@@ -18,6 +19,20 @@ const TradeInfoPanel: FC<TradeInfoPanelProps> = ({tradingViewTradeInfo, setStatu
 
     const [tradeInfo, setTradeInfo] = useState<TradeInfo>(getTradeInfoInitialData(tradingViewTradeInfo));
     const [isLoading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        let executionType = getDefaultTradeExecutionType();
+        let pendingOrderType;
+        if (executionType == TradeExecutionType.PENDING_ORDER) {
+            pendingOrderType = getDefaultPendingOrderType(tradingViewTradeInfo.type);
+        }
+
+        setTradeInfo({
+            ...getTradeInfoInitialData(tradingViewTradeInfo), 
+            tradeExecutionType: executionType,
+            pendingOrderType: pendingOrderType
+        })
+    }, []);
 
     const sendOrder = () => {
         setLoading(true);
@@ -36,6 +51,21 @@ const TradeInfoPanel: FC<TradeInfoPanelProps> = ({tradingViewTradeInfo, setStatu
             errorMessageCallback(JSON.stringify(error));
         })
     };
+
+    const mapToPendingOrderType = (orderType: TradeType, executionType: TradeExecutionType): PendingOrderType | undefined => {
+        let pendingOrderType;
+        if (executionType === TradeExecutionType.PENDING_ORDER) {
+            switch (orderType) {
+                case TradeType.LONG:
+                    pendingOrderType = PendingOrderType.AUTO_PENDING_BUY;
+                    break;
+                case TradeType.SHORT:
+                    pendingOrderType = PendingOrderType.AUTO_PENDING_SELL;
+                    break;
+            }
+        }
+        return pendingOrderType;
+    }
     
     return (
         <>
@@ -71,14 +101,17 @@ const TradeInfoPanel: FC<TradeInfoPanelProps> = ({tradingViewTradeInfo, setStatu
             />
             <SelectInputSection 
                 label="Order execution type" 
-                defaultValue={getDefaultTradeExecutionType()} 
+                defaultValue={tradeInfo.tradeExecutionType} 
                 options={TRADE_EXECUTION_TYPE_OPTIONS} 
-                onChangeFn={(value: TradeExecutionType) => setTradeInfo({...tradeInfo, tradeExecutionType: value})}
+                onChangeFn={(value: TradeExecutionType) => {
+                    let pendingOrderType = mapToPendingOrderType(tradeInfo.type, value);
+                    setTradeInfo({...tradeInfo, tradeExecutionType: value, pendingOrderType});
+                }}
             />
             {tradeInfo.tradeExecutionType === TradeExecutionType.PENDING_ORDER && (
                 <SelectInputSection 
                     label="Pending order type" 
-                    defaultValue={getDefaultPendingOrderType()} 
+                    defaultValue={tradeInfo.pendingOrderType} 
                     options={getOrderTypePendingOptions(tradeInfo.type)} 
                     onChangeFn={(value: PendingOrderType) => setTradeInfo({...tradeInfo, pendingOrderType: value})}
                 />

@@ -28,7 +28,8 @@ export enum TradeExecutionType {
 }
 
 export enum PendingOrderType {
-    AUTO = 'AUTO',
+    AUTO_PENDING_BUY = 'AUTO_PENDING_BUY',
+    AUTO_PENDING_SELL = 'AUTO_PENDING_SELL',
     BUY_LIMIT = 'BUY_LIMIT',
     SELL_LIMIT = 'SELL_LIMIT',
     BUY_STOP = 'BUY_STOP',
@@ -40,4 +41,10 @@ export enum MainContentPanelState {
     TRADE_FOUND = 'TRADE_FOUND',
     TRADE_PLACED_SUCCESSFULLY = 'TRADE_PLACED_SUCCESSFULLY',
     ERROR_PLACING_TRADE = 'ERROR_PLACING_TRADE'
+}
+
+export enum BrowserType {
+    FIREFOX = 'FIREFOX',
+    CHROME = 'CHROME',
+    UNKNOWN = 'UNKNOWN'
 }
