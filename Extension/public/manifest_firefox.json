@@ -2,13 +2,14 @@
     "manifest_version": 2,
     "name": "Neo Trader",
     "version": "1.0",
-    "description": "Send orders from Tradingview to Metatrader platform by one click.",
+    "description": "Send orders from Tradingview to Metatrader platform with one click.",
     "icons": {
         "48": "assets/logo-48.png",
         "96": "assets/logo-96.png"
     },
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "<all_urls>"
     ],
     "browser_action": {
         "default_icon": "assets/logo-410.png",
