@@ -1,3 +1,12 @@
+//+------------------------------------------------------------------+
+//|                                                    NeoTrader.mq5 |
+//|                                  Copyright 2023, MetaQuotes Ltd. |
+//|                                             https://www.mql5.com |
+//+------------------------------------------------------------------+
+#property copyright "Copyright 2023, Dilip Roshitha"
+#property link      "https://github.com/diliproshitha/"
+#property version   "1.00"
+
 /* ###################################################################
 
 Example socket server.
@@ -41,6 +50,8 @@ input int MaximumSlippage = 3;
 input int MagicNumber = 98765;
 input color ArrowColor = clrRed;
 input string SymbolPostfix = "";
+input bool CalculateLotSizeToFixedValue = false;
+input double AccountBalanceToCalculateLotSize = 10000;
 
 
 // --------------------------------------------------------------------
@@ -165,7 +176,7 @@ void AcceptNewConnections()
          glbClients[sz] = pNewClient;
          Print("New client connection");
          
-         pNewClient.Send("Hello\r\n");
+         // pNewClient.Send("Hello\r\n");
       }
       
    } while (pNewClient != NULL);
@@ -232,10 +243,19 @@ void HandleSocketIncomingData(int idxClient)
          // Potentially handle other commands etc here.
          // For example purposes, we'll simply print messages to the Experts log
          Print("<- ", strCommand);
-         ProcessUrlString(strCommand);
-         
-         
+         bool result = ProcessOrder(strCommand);//---
+         if (result) {
+            Print("Order placed successfully");
+            pClient.Send("HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\n\nSUCCESS");
+         } else {
+             string error = GetLastError();
+             Print("Error sending sell limit order: ", error);
+             pClient.Send("HTTP/1.1 500 INTERNAL_SERVER_ERROR\r\nAccess-Control-Allow-Origin: *\n\nERROR: " + error);
+         }
+         bForceClose = true;
+        
       }
+      break;
    } while (strCommand != "");
 
    // If the socket has been closed, or the client has sent a close message,
@@ -256,13 +276,13 @@ void HandleSocketIncomingData(int idxClient)
    }
 }
 
-void ProcessUrlString(string urlString) {
+bool ProcessOrder(string urlString) {
    string symbol = "";
-   string type = "";
+   int type = 0;
    double entryPrice = 0.0;
    double stopLossPrice = 0.0;
    double takeProfitPrice = 0.0;
-   double riskPercentage = DefaultRiskPercentage;
+   double riskPercentage = DefaultRiskPercentage / 100;
    
    // Define an array of attribute names
    string attributeNames[5] = {"symbol", "type", "entryPrice", "stopLossPrice", "takeProfitPrice", "riskPercentage"};
@@ -281,7 +301,7 @@ void ProcessUrlString(string urlString) {
            if (myAttributeName == "symbol") {
                symbol = myValue + SymbolPostfix;
            } else if (myAttributeName == "type") {
-               type = myValue;
+               type = StrToInteger(myValue);
            } else if (myAttributeName == "entryPrice") {
                entryPrice = StrToDouble(myValue);
            } else if (myAttributeName == "stopLossPrice") {
@@ -289,18 +309,17 @@ void ProcessUrlString(string urlString) {
            } else if (myAttributeName == "takeProfitPrice") {
                takeProfitPrice = StrToDouble(myValue);
            } else if (myAttributeName == "riskPercentage") {
-               riskPercentage = StrToDouble(myValue);
+               riskPercentage = StrToDouble(myValue) / 100;
            }
        }
    }
-   
-   SubmitTrade(symbol, type, entryPrice, stopLossPrice, takeProfitPrice, riskPercentage);
+   return SubmitTrade(symbol, type, entryPrice, stopLossPrice, takeProfitPrice, riskPercentage);
 }
 
-bool SubmitTrade(string symbol, string type, double entryPrice, double stopLossPrice, double takeProfitPrice, double riskPercentage) {
+bool SubmitTrade(string symbol, int type, double entryPrice, double stopLossPrice, double takeProfitPrice, double riskPercentage) {
    int stopLossDistance = GetDifferenceInPips(entryPrice, stopLossPrice);
    Print("stopLossDistance: ", stopLossDistance);
-   double lotSize = GetLotSize(riskPercentage/100, stopLossDistance, symbol);
+   double lotSize = GetLotSize(riskPercentage, stopLossDistance, symbol);
    
    Print("Symbol: ", symbol);
    Print("Type: ", type);
@@ -309,29 +328,60 @@ bool SubmitTrade(string symbol, string type, double entryPrice, double stopLossP
    Print("Take Profit Price: ", takeProfitPrice);
    Print("Lot Size: ", lotSize);
    
-   bool result = OrderSend(symbol, ToOrderType(type), lotSize, entryPrice, MaximumSlippage, stopLossPrice, takeProfitPrice, "Order submitted by TradingviewToMetatrader EA", MagicNumber, 0, ArrowColor);
-   if (result) {
-       Print("Sell limit order sent successfully");
-   } else {
-       Print("Error sending sell limit order: ", GetLastError());
-   }
-   return result;
+   return OrderSend(symbol, ToOrderType(type, entryPrice, symbol), lotSize, entryPrice, MaximumSlippage, stopLossPrice, takeProfitPrice, "Order submitted by Neo Trader EA", MagicNumber, 0, ArrowColor);
 }
 
-int ToOrderType(string type) {
-   if (type == "LONG") {
+int ToOrderType(int type, double orderPrice, string symbol) {
+   if (type == 110) {
+      return OP_BUY;
+   } else if (type == 121) {
+      return DeterminePendingOrderType(MarketInfo(symbol, MODE_BID), orderPrice, OP_BUY);
+   } else if (type == 122) {
       return OP_BUYLIMIT;
-   }
-   else {
+   } else if (type == 123) {
+      return OP_BUYSTOP;
+   } else if (type == 210) {
+      return OP_SELL;
+   } else if (type == 221) {
+      return DeterminePendingOrderType(MarketInfo(symbol, MODE_ASK), orderPrice, OP_SELL);
+   } else if (type == 222) {
       return OP_SELLLIMIT;
+   } else if (type == 223) {
+      return OP_SELLSTOP;
+   } else {
+      return -1; // invalid
    }
 }
 
-double GetLotSize(double riskPercentage, int stopLossDistance, string symbol) {
-   double accountSize = AccountBalance(); // get the account balance
-   double lotSize = (accountSize * riskPercentage / 100) / MarketInfo(symbol, MODE_TICKVALUE);
-   double lotStep = MarketInfo(symbol, MODE_LOTSTEP);
-   return NormalizeDouble(lotSize / lotStep, 0) * lotStep; // calculate lot size
+// Determine the pending order type based on current price and order price
+int DeterminePendingOrderType(double currentPrice, double orderPrice, int orderType) {
+    if (orderType == OP_BUY) {
+        if (currentPrice > orderPrice) {
+            return OP_BUYSTOP;  // Buy Stop order
+        } else {
+            return OP_BUYLIMIT;  // Buy Limit order
+        }
+    } else if (orderType == OP_SELL) {
+        if (currentPrice > orderPrice) {
+            return OP_SELLSTOP;  // Sell Stop order
+        } else {
+            return OP_SELLLIMIT;  // Sell Limit order
+        }
+    } else {
+        return -1;  // Invalid order type
+    }
+}
+
+double GetLotSize(double riskPercentage, int stopLossPips, string symbol) {
+   double tickValue = MarketInfo(Symbol(), MODE_TICKVALUE);
+   return (accountBalance * riskPercentage) / (stopLossPips * tickValue);
+}
+
+double GetAccountBalanceForLotSizeCalc() {
+   if (CalculateLotSizeToFixedValue) {
+      return AccountBalanceToCalculateLotSize;
+   }
+   return AccountBalance();
 }
 
 int GetDifferenceInPips(double firstValue, double secondValue) {
