@@ -40,14 +40,19 @@ const TradeInfoPanel: FC<TradeInfoPanelProps> = ({tradingViewTradeInfo, setStatu
         const headers = getOrderSubmitRequestHeaders();
 
         fetch(url, headers)
+        .then(response => response.json())
         .then(response => {
+            console.log(response);
             setLoading(false);
-            setStatusCallback(MainContentPanelState.TRADE_PLACED_SUCCESSFULLY);
-            console.log(JSON.stringify(response))
+            if (!response.error) {
+                setStatusCallback(MainContentPanelState.TRADE_PLACED_SUCCESSFULLY);
+            } else {
+                setStatusCallback(MainContentPanelState.ERROR_PLACING_TRADE);
+                errorMessageCallback(`errorCode: ${response.error}`);
+            }
         })
         .catch(error => {
             setLoading(false);
-            setStatusCallback(MainContentPanelState.ERROR_PLACING_TRADE);
             errorMessageCallback(JSON.stringify(error));
         })
     };
