@@ -1,6 +1,9 @@
 This project was bootstrapped with
 [Create React App](https://github.com/facebook/create-react-app).
 
+Uses Node version: v18.16.1
+NPM version: 9.5.1
+
 ## Available Scripts
 
 In the project directory, you can run:

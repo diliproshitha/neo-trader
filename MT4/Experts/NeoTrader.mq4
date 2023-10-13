@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
 //|                                                    NeoTrader.mq5 |
-//|                                  Copyright 2023, MetaQuotes Ltd. |
-//|                                             https://www.mql5.com |
+//|                                  Copyright 2023, Dilip Roshitha. |
+//|                                https://github.com/diliproshitha/ |
 //+------------------------------------------------------------------+
 #property copyright "Copyright 2023, Dilip Roshitha"
 #property link      "https://github.com/diliproshitha/"
@@ -246,14 +246,19 @@ void HandleSocketIncomingData(int idxClient)
          bool result = ProcessOrder(strCommand);//---
          if (result) {
             Print("Order placed successfully");
-            pClient.Send("HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\n\nSUCCESS");
+            string successPayload = "{\"message\": \"SUCCESS\"}";
+             string header = "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: application/json";
+             header = header + "\r\nContent-Length: " + IntegerToString(StringLen(successPayload));
+            pClient.Send(header + "\n\n" + successPayload);
          } else {
-             string error = GetLastError();
-             Print("Error sending sell limit order: ", error);
-             pClient.Send("HTTP/1.1 500 INTERNAL_SERVER_ERROR\r\nAccess-Control-Allow-Origin: *\n\nERROR: " + error);
+             int error = GetLastError();
+             Print("Error sending sell order. Code: ", error);
+             string errorPayload = "{\"error\": \"" + IntegerToString(error) + "\"}";
+             string header = "HTTP/1.1 500 INTERNAL_SERVER_ERROR\r\nAccess-Control-Allow-Origin: *";
+             header = header + "\r\nContent-Length: " + IntegerToString(StringLen(errorPayload));
+             pClient.Send(header + "\n\n" + errorPayload);
          }
          bForceClose = true;
-        
       }
       break;
    } while (strCommand != "");
@@ -317,9 +322,9 @@ bool ProcessOrder(string urlString) {
 }
 
 bool SubmitTrade(string symbol, int type, double entryPrice, double stopLossPrice, double takeProfitPrice, double riskPercentage) {
-   int stopLossDistance = GetDifferenceInPips(entryPrice, stopLossPrice);
-   Print("stopLossDistance: ", stopLossDistance);
-   double lotSize = GetLotSize(riskPercentage, stopLossDistance, symbol);
+   int stopLossPips = GetDifferenceInPips(entryPrice, stopLossPrice, symbol);
+   Print("stopLossPips: ", stopLossPips);
+   double lotSize = GetLotSize(riskPercentage, stopLossPips, symbol);
    
    Print("Symbol: ", symbol);
    Print("Type: ", type);
@@ -357,9 +362,9 @@ int ToOrderType(int type, double orderPrice, string symbol) {
 int DeterminePendingOrderType(double currentPrice, double orderPrice, int orderType) {
     if (orderType == OP_BUY) {
         if (currentPrice > orderPrice) {
-            return OP_BUYSTOP;  // Buy Stop order
+            return OP_BUYLIMIT;  // Buy Stop order
         } else {
-            return OP_BUYLIMIT;  // Buy Limit order
+            return OP_BUYSTOP;  // Buy Limit order
         }
     } else if (orderType == OP_SELL) {
         if (currentPrice > orderPrice) {
@@ -373,7 +378,8 @@ int DeterminePendingOrderType(double currentPrice, double orderPrice, int orderT
 }
 
 double GetLotSize(double riskPercentage, int stopLossPips, string symbol) {
-   double tickValue = MarketInfo(Symbol(), MODE_TICKVALUE);
+   double accountBalance = GetAccountBalanceForLotSizeCalc();
+   double tickValue = MarketInfo(symbol, MODE_TICKVALUE);
    return (accountBalance * riskPercentage) / (stopLossPips * tickValue);
 }
 
@@ -384,15 +390,15 @@ double GetAccountBalanceForLotSizeCalc() {
    return AccountBalance();
 }
 
-int GetDifferenceInPips(double firstValue, double secondValue) {
-   double factor = GetFactor();
+int GetDifferenceInPips(double firstValue, double secondValue, string symbol) {
+   double factor = GetFactor(symbol);
    Print("Factor", factor);
    return MathAbs(firstValue - secondValue) * factor;
    
 }
 
-double GetFactor() {
-   return MathPow(10, Digits);
+double GetFactor(string symbol) {
+   return MathPow(10, MarketInfo(symbol, MODE_DIGITS));
 }
 
 
