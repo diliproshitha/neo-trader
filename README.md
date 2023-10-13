@@ -33,7 +33,7 @@
    Position details popup will appear. 
    - Open the extension, and it will show the position details. 
    - Select desired order execution type. (Market order or Pending order)
-   - If execution type is pending, then select pending order type. If set to `Auto`, EA will determine whether to place to a Limit order or a Buy order according to current price.
+   - If execution type is pending, then select pending order type. If set to `Auto`, EA will determine whether to place to a Limit order or a Stop order according to current price.
    - Then click on `Send` button. Trade will be placed in the Metatrader platform.
 
 #### If you have any issues regarding EA or browser plugin, please raise a Github issue.
