@@ -24,7 +24,7 @@
       - AccountBalanceToCalculateLotSize - If CalculateLotSizeToFixedValue is set to `true`, this value will be used to calculate lot size as account balance.
 2. Install Browser extension.
    - Firefox: https://addons.mozilla.org/en-US/firefox/addon/neo-trader/
-   - Chrome - Coming soon...
+   - Chrome - https://chrome.google.com/webstore/detail/neo-trader/cjdgehgngjapndihjoddmpiafiagbcpb?utm_source=ext_app_menu
 3. Send positions from Tradingview to Metatrader.
 
     ![tradingview-extension.png](tradingview-extension.png)
