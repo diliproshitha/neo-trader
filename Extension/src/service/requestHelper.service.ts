@@ -1,7 +1,7 @@
 import { PendingOrderType, TradeExecutionType, TradeInfo, TradeType } from "../models/commonModels";
 
-export const buildOrderSubmitUrl = (tradeInfo: TradeInfo) => {
-    return `http://localhost:23456/submit-trade?` +
+export const buildOrderSubmitUrl = (tradeInfo: TradeInfo, serverAddress: string) => {
+    return `${serverAddress}/submit-trade?` +
         `symbol=${tradeInfo.instrument}` +
         `&type=${mapTradeTypes(tradeInfo.type, tradeInfo.tradeExecutionType, tradeInfo.pendingOrderType)}` +
         `&entryPrice=${tradeInfo.entryPrice}` +

@@ -8,6 +8,7 @@ import { getDefaultPendingOrderType, getDefaultTradeExecutionType } from "../../
 import { TRADE_EXECUTION_TYPE_OPTIONS } from "../../constants/commonConstants";
 import { buildOrderSubmitUrl, getOrderSubmitRequestHeaders } from "../../service/requestHelper.service";
 import { useEffect } from "react";
+import { submitOrders } from "../../service/orderManager.service";
 
 type TradeInfoPanelProps = {
     tradingViewTradeInfo: TradingViewTradeInfo,
@@ -36,25 +37,21 @@ const TradeInfoPanel: FC<TradeInfoPanelProps> = ({tradingViewTradeInfo, setStatu
 
     const sendOrder = () => {
         setLoading(true);
-        const url = buildOrderSubmitUrl(tradeInfo);
-        const headers = getOrderSubmitRequestHeaders();
-
-        fetch(url, headers)
-        .then(response => response.json())
-        .then(response => {
-            console.log(response);
-            setLoading(false);
-            if (!response.error) {
-                setStatusCallback(MainContentPanelState.TRADE_PLACED_SUCCESSFULLY);
-            } else {
+        submitOrders(tradeInfo)
+            .then(response => {
+                setLoading(false);
+                if (response) {
+                    setStatusCallback(MainContentPanelState.TRADE_PLACED_SUCCESSFULLY);
+                } else {
+                    setStatusCallback(MainContentPanelState.ERROR_PLACING_TRADE);
+                    errorMessageCallback('Failed to submit orders to all servers');
+                }
+            })
+            .catch(error => {
+                setLoading(false);
                 setStatusCallback(MainContentPanelState.ERROR_PLACING_TRADE);
-                errorMessageCallback(`errorCode: ${response.error}`);
-            }
-        })
-        .catch(error => {
-            setLoading(false);
-            errorMessageCallback(JSON.stringify(error));
-        })
+                errorMessageCallback(error.message || 'Unknown error occurred');
+            });
     };
 
     const mapToPendingOrderType = (orderType: TradeType, executionType: TradeExecutionType): PendingOrderType | undefined => {
