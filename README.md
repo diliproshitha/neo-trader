@@ -11,8 +11,7 @@
 
       ![Screenshot of Expert advisor configurations](mt4-expert.png "EA Configurations")
 
-      - ServerPort - port of the server to be run. Do not change this for now, because I have hardcoded
-      this port in the browser plugin. I will add a settings page to browser plugin in the future to make this configurable.
+      - ServerPort - port of the server to be run.
       - DefaultRiskPercentage - Risk percentage per trade. This can be overridden using browser plugin.
       - MaximumSplippage - Maximum allowed splippage when executing the trade. This is not applicable to limit trades, 
       so we do not need to worry about this.
@@ -25,7 +24,10 @@
 2. Install Browser extension.
    - Firefox: https://addons.mozilla.org/en-US/firefox/addon/neo-trader/
    - Chrome - https://chrome.google.com/webstore/detail/neo-trader/cjdgehgngjapndihjoddmpiafiagbcpb?utm_source=ext_app_menu
-3. Send positions from Tradingview to Metatrader.
+3. Configure server Addresses.
+    - If you run your terminals locally, then you can use address: `http://localhost:EA_SERVER_PORT`.
+    - If you are running terminals in a remote VPS, then you need to expose configured EA server port using ngrok. You can use [this guide](REMOTE_SERVER_GUIDE.md) to configure ngrok.
+4. Send positions from Tradingview to Metatrader.
 
     ![tradingview-extension.png](tradingview-extension.png)
 
