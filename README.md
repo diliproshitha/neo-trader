@@ -24,7 +24,7 @@
 2. Install Browser extension.
    - Firefox: https://addons.mozilla.org/en-US/firefox/addon/neo-trader/
    - Chrome - https://chrome.google.com/webstore/detail/neo-trader/cjdgehgngjapndihjoddmpiafiagbcpb?utm_source=ext_app_menu
-3. Configure server Addresses.
+3. Configure server Addresses. You can add addresses by clicking on settings icon in the extension.
     - If you run your terminals locally, then you can use address: `http://localhost:EA_SERVER_PORT`.
     - If you are running terminals in a remote VPS, then you need to expose configured EA server port using ngrok. You can use [this guide](REMOTE_SERVER_GUIDE.md) to configure ngrok.
 4. Send positions from Tradingview to Metatrader.
