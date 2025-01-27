@@ -40,6 +40,9 @@
 
 #### If you have any issues regarding EA or browser plugin, please raise a Github issue.
 
+## Legal Notice
+This software is provided "as is" without warranty of any kind. The authors and contributors are not responsible for any losses, damages, or other liabilities arising from the use of this software. Users are solely responsible for compliance with applicable securities regulations and broker requirements.
+
 ## Credits:
 I have used following socket library to build the EA.
 - https://www.mql5.com/en/blogs/post/706665
