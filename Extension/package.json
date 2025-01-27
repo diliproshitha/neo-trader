@@ -28,7 +28,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-chrome": "sh build-chrome.sh",
+    "build-firefox": "sh build-firefox.sh"
   },
   "eslintConfig": {
     "extends": "react-app"

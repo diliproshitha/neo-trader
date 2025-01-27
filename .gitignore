@@ -54,3 +54,4 @@ Thumbs.db
 *.mov
 *.wmv
 
+/Extension/build/
