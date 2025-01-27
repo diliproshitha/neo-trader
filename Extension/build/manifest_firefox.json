@@ -1,0 +1,26 @@
+{
+    "manifest_version": 3,
+    "name": "Neo Trader",
+    "version": "1.1",
+    "description": "Send orders from Tradingview to Metatrader platform with one click.",
+    "icons": {
+        "48": "assets/logo-48.png",
+        "96": "assets/logo-96.png"
+    },
+    "permissions": [
+        "activeTab",
+        "<all_urls>"
+    ],
+    "browser_action": {
+        "default_icon": "assets/logo-410.png",
+        "theme_icons": [
+            {
+                "light": "assets/logo-32.png",
+                "dark": "assets/logo-32.png",
+                "size": 32
+            }
+        ],
+        "default_title": "Neo Trader",
+        "default_popup": "index.html"
+    }
+}
