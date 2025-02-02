@@ -1,13 +1,19 @@
 import { PendingOrderType, TradeExecutionType, TradeInfo, TradeType } from "../models/commonModels";
 
-export const buildOrderSubmitUrl = (tradeInfo: TradeInfo, serverAddress: string) => {
-    return `${serverAddress}/submit-trade?` +
+export const buildOrderSubmitUrl = (tradeInfo: TradeInfo, serverAddress: string, lotSize: string | undefined) => {
+    let url = `${serverAddress}/submit-trade?` +
         `symbol=${tradeInfo.instrument}` +
         `&type=${mapTradeTypes(tradeInfo.type, tradeInfo.tradeExecutionType, tradeInfo.pendingOrderType)}` +
         `&entryPrice=${tradeInfo.entryPrice}` +
         `&stopLossPrice=${tradeInfo.stopLossPrice}` +
         `&takeProfitPrice=${tradeInfo.takeProfitPrice}` +
         `&riskPercentage=${tradeInfo.riskPercentage}`;
+
+    if (lotSize) {
+        url += `&lotSize=${lotSize}`;
+    }
+
+    return url;
 };
 
 /**

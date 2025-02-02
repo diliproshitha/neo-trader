@@ -1,19 +1,20 @@
 import { TradeInfo } from "../models/commonModels";
+import { ServerSettings } from "../models/settings";
+import { OrderMapperService } from "./orderMapper.service";
 import { buildOrderSubmitUrl, getOrderSubmitRequestHeaders } from "./requestHelper.service";
 
 export const submitOrders = async (tradeInfo: TradeInfo): Promise<boolean> => {
     // Get server addresses from localStorage
-    const serverAddressesStr = localStorage.getItem('servers');
-    if (!serverAddressesStr) {
+    const serverSettingsStr = localStorage.getItem('serverSettings');
+    if (!serverSettingsStr) {
         throw new Error('No server addresses found in localStorage');
     }
 
-    const serverAddresses: string[] = JSON.parse(serverAddressesStr);
+    const serverSettings: ServerSettings[] = JSON.parse(serverSettingsStr);
     
     // Build requests for all servers
-    const requests = serverAddresses.map(serverAddress => {
-        const url = buildOrderSubmitUrl(tradeInfo, serverAddress);
-        return fetch(url, getOrderSubmitRequestHeaders());
+    const requests = serverSettings.map(serverConfig => {
+        return OrderMapperService.mapOrder(tradeInfo, serverConfig);
     });
 
     // Submit all orders concurrently
