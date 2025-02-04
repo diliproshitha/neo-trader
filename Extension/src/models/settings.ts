@@ -31,6 +31,7 @@ export enum InstrumentType {
 export interface ServerSettings {
     id: string;
     name: string;
+    active: boolean;
     address: string;
     accountSize?: number;
     terminalType: TerminalType;

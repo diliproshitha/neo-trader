@@ -13,12 +13,12 @@ export class Mt4OrderMapperService {
     static mapOrder(order: TradeInfo, serverSettings: ServerSettings): Promise<any> {
 
         const instrumentMapping = this.filterInstrumentMappings(serverSettings.instrumentMappings, order.instrument);
-        const instrumentLotSizeConfig = this.filterInstrumentLotSizeConfigs(serverSettings.instrumentLotSizeConfigs, order.instrument);
+        // const instrumentLotSizeConfig = this.filterInstrumentLotSizeConfigs(serverSettings.instrumentLotSizeConfigs, order.instrument);
 
-        const lotSize = LotSizeCalculatorService.calculateLotSize(order, serverSettings.accountSize, instrumentLotSizeConfig);
+        // const lotSize = LotSizeCalculatorService.calculateLotSize(order, serverSettings.accountSize, instrumentLotSizeConfig);
         const instrumentMappedTradeInfo = InstrumentMapperService.mapInstrument(order, instrumentMapping);
-        const priceMappedTradeInfo = PriceMapperService.mapPrices(instrumentMappedTradeInfo, instrumentMapping);
-        const url = buildOrderSubmitUrl(priceMappedTradeInfo, serverSettings.address, lotSize);
+        // const priceMappedTradeInfo = PriceMapperService.mapPrices(instrumentMappedTradeInfo, instrumentMapping);
+        const url = buildOrderSubmitUrl(instrumentMappedTradeInfo, serverSettings.address);
         return fetch(url, getOrderSubmitRequestHeaders());
     }
 

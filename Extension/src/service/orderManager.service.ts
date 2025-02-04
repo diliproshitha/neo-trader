@@ -11,9 +11,15 @@ export const submitOrders = async (tradeInfo: TradeInfo): Promise<boolean> => {
     }
 
     const serverSettings: ServerSettings[] = JSON.parse(serverSettingsStr);
+    const activeServers = serverSettings
+    .filter(serverConfig => serverConfig.active);
+
+    if (activeServers.length === 0) {
+        throw new Error('No active servers found!');
+    }
     
     // Build requests for all servers
-    const requests = serverSettings.map(serverConfig => {
+    const requests = activeServers.map(serverConfig => {
         return OrderMapperService.mapOrder(tradeInfo, serverConfig);
     });
 
@@ -24,7 +30,7 @@ export const submitOrders = async (tradeInfo: TradeInfo): Promise<boolean> => {
     const allSuccessful = responses.every(response => response.ok);
     
     if (!allSuccessful) {
-        throw new Error('Some orders failed to submit');
+        throw new Error('Some orders failed to submit!');
     }
 
     return true;

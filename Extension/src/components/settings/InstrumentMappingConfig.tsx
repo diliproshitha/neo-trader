@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   Box,
+  Tooltip,
 } from '@chakra-ui/react';
 import { DeleteIcon, AddIcon } from '@chakra-ui/icons';
 import { InstrumentMapping } from '../../models/settings';
@@ -50,29 +51,35 @@ const InstrumentMappingConfig: React.FC<InstrumentMappingConfigProps> = ({
               isChecked={mapping.active}
               onChange={(e) => updateMapping(mapping.id, { active: e.target.checked })}
             />
-            <Input
-              placeholder="TradingView Symbol"
-              value={mapping.tradingviewSymbol}
-              onChange={(e) => updateMapping(mapping.id, { tradingviewSymbol: e.target.value })}
-              width="200px"
-            />
-            <Input
-              placeholder="Terminal Symbol"
-              value={mapping.terminalSymbol}
-              onChange={(e) => updateMapping(mapping.id, { terminalSymbol: e.target.value })}
-              width="200px"
-            />
-            <Input
-              placeholder="Price Correction"
-              type="number"
-              value={mapping.priceCorrection !== undefined ? mapping.priceCorrection : ''}
-              onChange={(e) => {
-                updateMapping(mapping.id, { 
-                  priceCorrection: e.target.value === '' ? 0 : Number(e.target.value)
-                })
-              }}
-              width="150px"
-            />
+            <Tooltip label="TradingView Symbol">
+              <Input
+                placeholder="TradingView Symbol"
+                value={mapping.tradingviewSymbol}
+                onChange={(e) => updateMapping(mapping.id, { tradingviewSymbol: e.target.value })}
+                width="200px"
+              />
+            </Tooltip>
+            <Tooltip label="Trading terminal symbol">
+              <Input
+                placeholder="Terminal Symbol"
+                value={mapping.terminalSymbol}
+                onChange={(e) => updateMapping(mapping.id, { terminalSymbol: e.target.value })}
+                width="200px"
+              />
+            </Tooltip>
+            <Tooltip label="Price correction. If the price in TradingView is different from the price in the terminal, enter the difference here. So when you submit an order, the price will be corrected by this amount.">
+              <Input
+                placeholder="Price Correction"
+                type="number"
+                value={mapping.priceCorrection !== undefined ? mapping.priceCorrection : ''}
+                onChange={(e) => {
+                  updateMapping(mapping.id, { 
+                    priceCorrection: e.target.value === '' ? 0 : Number(e.target.value)
+                  })
+                }}
+                width="150px"
+              />
+            </Tooltip>
             <IconButton
               aria-label="Delete mapping"
               icon={<DeleteIcon />}

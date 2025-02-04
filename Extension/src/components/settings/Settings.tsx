@@ -77,7 +77,7 @@ const Settings = ({ onClose }: SettingsProps) => {
                                         }}
                                     />
                                     <Text flex="1">
-                                        {server.name || server.address}
+                                        {server.name || server.address.replace(/^https?:\/\//, '').substring(0, 15)}
                                     </Text>
                                     <Button
                                         size="sm"

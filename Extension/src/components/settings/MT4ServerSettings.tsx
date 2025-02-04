@@ -148,7 +148,7 @@ const MT4ServerSettings: React.FC<MT4ServerSettingsProps> = ({
         </Box>
       </Collapse>
 
-      <Button onClick={() => setIsLotSizeOpen(!isLotSizeOpen)} size="sm" variant="outline">
+      {/* <Button onClick={() => setIsLotSizeOpen(!isLotSizeOpen)} size="sm" variant="outline">
         {isLotSizeOpen ? 'Hide' : 'Show'} Lot Size Settings
       </Button>
 
@@ -164,7 +164,7 @@ const MT4ServerSettings: React.FC<MT4ServerSettingsProps> = ({
             })}
           />
         </Box>
-      </Collapse>
+      </Collapse> */}
     </VStack>
   );
 };
